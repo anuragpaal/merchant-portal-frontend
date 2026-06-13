@@ -1,9 +1,15 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes } from "react-router-dom";
+
+import { PublicRoutes } from "./PublicRoutes";
+import { ProtectedRoutes } from "./ProtectedRoutes";
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
-      <div>Router Working</div>
+      <Routes>
+        {PublicRoutes()}
+        {ProtectedRoutes()}
+      </Routes>
     </BrowserRouter>
   );
 };
