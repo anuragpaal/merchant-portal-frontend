@@ -1,6 +1,6 @@
-import { apiClient } from "@/shared/services/apiClient";
+import { apiClient } from "../../../shared/services/apiClient";
 
-import { API_ROUTES } from "@/shared/constants/api-routes.constants";
+import { API_ROUTES } from "../../../shared/constants/api-routes.constants";
 import type { LoginRequest } from "../types/login.types";
 import type { RegisterRequest } from "../types/register.types";
 

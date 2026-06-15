@@ -1,13 +1,20 @@
-import { Route } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-import LoginPage from "../../modules/auth/pages/LoginPage";
-import RegisterPage from "../../modules/auth/pages/RegisterPage";
+import { useAppSelector } from "../../shared/hooks/useAppSelector";
+import { selectIsAuthenticated } from "../../modules/auth/store/authSelectors";
 
-export const PublicRoutes = () => {
-  return (
-    <>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-    </>
+const PublicRoute = () => {
+  const isAuthenticated =
+    useAppSelector(selectIsAuthenticated);
+
+  return !isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate
+      to="/dashboard"
+      replace
+    />
   );
 };
+
+export default PublicRoute;

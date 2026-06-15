@@ -1,11 +1,20 @@
-import { Route } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-import DashboardPage from "../../modules/dashboard/pages/DashboardPage";
+import { useAppSelector } from "../../shared/hooks/useAppSelector";
+import { selectIsAuthenticated } from "../../modules/auth/store/authSelectors";
 
-export const ProtectedRoutes = () => {
-  return (
-    <>
-      <Route path="/" element={<DashboardPage />} />
-    </>
+const ProtectedRoute = () => {
+  const isAuthenticated =
+    useAppSelector(selectIsAuthenticated);
+
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate
+      to="/login"
+      replace
+    />
   );
 };
+
+export default ProtectedRoute;

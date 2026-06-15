@@ -8,6 +8,8 @@ import {
   loginRequest,
   loginSuccess,
   loginFailure,
+  logoutSuccess,
+  logoutRequest,
 } from "./authSlice";
 
 function* loginWorker(
@@ -39,9 +41,23 @@ function* loginWorker(
   }
 }
 
+function* logoutWorker() {
+  try {
+    yield delay(500);
+
+    yield put(logoutSuccess());
+  } catch (error) {
+    yield put(loginFailure("Logout Failed"));
+  }
+}
+
 export default function* authSaga() {
   yield takeLatest(
     loginRequest.type,
     loginWorker
   );
+  yield takeLatest(
+  logoutRequest.type,
+  logoutWorker
+);
 }
