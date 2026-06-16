@@ -1,6 +1,7 @@
 import {
   takeLatest,
   put,
+  call,
   delay,
 } from "redux-saga/effects";
 
@@ -10,7 +11,12 @@ import {
   loginFailure,
   logoutSuccess,
   logoutRequest,
+  registerFailure,
+  registerSuccess,
+  registerRequest,
 } from "./authSlice";
+
+import { authService } from "../services/auth.service";
 
 function* loginWorker(
   action: ReturnType<
@@ -18,23 +24,33 @@ function* loginWorker(
   >
 ) {
   try {
-    yield delay(1000);
+    const response: {
+      data: {
+        user: {
+          id: number;
+          name: string;
+          email: string;
+          mobile: string;
+        };
+        accessToken: string;
+      };
+    } = yield call(
+      authService.login,
+      action.payload
+    );
 
     yield put(
       loginSuccess({
-        user: {
-          id: 1,
-          name: "Anu",
-          email:
-            action.payload.email,
-        },
+        user: response.data.user,
         accessToken:
-          "mock-token",
+          response.data.accessToken,
       })
     );
-  } catch {
+  } catch (error: any) {
     yield put(
       loginFailure(
+        error?.response?.data
+          ?.message ||
         "Login Failed"
       )
     );
@@ -51,13 +67,38 @@ function* logoutWorker() {
   }
 }
 
+function* registerWorker(
+  action: any
+) {
+  try {
+    yield call(() =>
+      authService.register(
+        action.payload
+      )
+    );
+
+    yield put(registerSuccess());
+  } catch (error: any) {
+    yield put(
+      registerFailure(
+        error?.response?.data?.message ||
+        "Register Failed"
+      )
+    );
+  }
+}
+
 export default function* authSaga() {
   yield takeLatest(
     loginRequest.type,
     loginWorker
   );
   yield takeLatest(
-  logoutRequest.type,
-  logoutWorker
-);
+    logoutRequest.type,
+    logoutWorker
+  );
+  yield takeLatest(
+    registerRequest.type,
+    registerWorker
+  );
 }

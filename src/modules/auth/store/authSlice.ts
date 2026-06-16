@@ -1,6 +1,7 @@
 import type { AuthState } from "../types/auth.types";
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { User } from "../types/user.types";
+import type { RegisterRequest } from "../types/register.types";
 
 const initialState: AuthState = {
   user: null,
@@ -56,6 +57,22 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = false;
     },
+
+    registerRequest: (
+      state,
+      action: PayloadAction<RegisterRequest>
+    ) => {
+      state.loading = true;
+    },
+
+    registerSuccess: (state) => {
+      state.loading = false;
+    },
+
+    registerFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -65,6 +82,9 @@ export const {
   loginFailure,
   logoutRequest,
   logoutSuccess,
+  registerRequest,
+  registerSuccess,
+  registerFailure,
 } = authSlice.actions;
 
 export default authSlice.reducer;

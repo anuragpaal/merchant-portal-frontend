@@ -9,8 +9,12 @@ import {
 } from "../validations/register.schema";
 
 import type { RegisterSchemaType } from "../validations/register.schema";
+import { useAppDispatch } from "../../../shared/hooks/useAppDispatch";
+import { registerRequest } from "../store/authSlice";
 
 const RegisterPage = () => {
+  const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
@@ -19,11 +23,19 @@ const RegisterPage = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (
-    data: RegisterSchemaType
-  ) => {
-    console.log(data);
-  };
+ const onSubmit = (
+  data: RegisterSchemaType
+) => {
+
+  const {
+    confirmPassword,
+    ...payload
+  } = data;
+
+  dispatch(
+    registerRequest(payload)
+  );
+};
 
   return (
     <div className="max-w-md mx-auto mt-10">
